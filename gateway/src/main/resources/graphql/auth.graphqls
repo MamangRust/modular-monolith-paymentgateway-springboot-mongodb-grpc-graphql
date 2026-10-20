@@ -1,0 +1,43 @@
+type TokenResponse {
+    access_token: String
+    refresh_token: String
+}
+
+type TokenApiResponse {
+    status: String
+    message: String
+    data: TokenResponse
+}
+
+input RegisterInput {
+    firstname: String
+    lastname: String
+    email: String
+    password: String
+    confirmPassword: String
+}
+
+input LoginInput {
+    username: String
+    password: String
+}
+
+input RefreshTokenInput {
+    refreshToken: String
+}
+
+extend type Query {
+    "Mirrors GET /api/auth/me."
+    me: UserApiResponse
+    "Mirrors GET /api/auth/healthchecker."
+    healthchecker: String
+}
+
+extend type Mutation {
+    "Mirrors POST /api/auth/register."
+    register(input: RegisterInput!): UserApiResponse
+    "Mirrors POST /api/auth/login."
+    login(input: LoginInput!): TokenApiResponse
+    "Mirrors POST /api/auth/refresh-token."
+    refreshToken(input: RefreshTokenInput!): TokenApiResponse
+}

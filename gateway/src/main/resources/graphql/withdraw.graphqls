@@ -1,0 +1,204 @@
+type Withdraw {
+    id: Long
+    withdrawNo: String
+    cardNumber: String
+    withdrawAmount: Long
+    withdrawTime: String
+    createdAt: String
+    updatedAt: String
+}
+
+type WithdrawDeleteAt {
+    id: Long
+    withdrawNo: String
+    cardNumber: String
+    withdrawAmount: Long
+    withdrawTime: String
+    createdAt: String
+    updatedAt: String
+    deletedAt: String
+}
+
+type WithdrawMonthlyAmount {
+    monthName: String
+    totalAmount: Long
+}
+
+type WithdrawYearlyAmount {
+    reportYear: String
+    totalAmount: Long
+}
+
+type WithdrawMonthStatusSuccess {
+    reportYear: String
+    monthName: String
+    totalAmount: Long
+    totalSuccess: Long
+}
+
+type WithdrawYearStatusSuccess {
+    reportYear: String
+    totalAmount: Long
+    totalSuccess: Long
+}
+
+type WithdrawMonthStatusFailed {
+    reportYear: String
+    monthName: String
+    totalAmount: Long
+    totalFailed: Long
+}
+
+type WithdrawYearStatusFailed {
+    reportYear: String
+    totalAmount: Long
+    totalFailed: Long
+}
+
+type WithdrawApiResponse {
+    status: String
+    message: String
+    data: Withdraw
+}
+
+type WithdrawDeleteAtApiResponse {
+    status: String
+    message: String
+    data: WithdrawDeleteAt
+}
+
+type WithdrawListApiResponse {
+    status: String
+    message: String
+    data: [Withdraw]
+}
+
+type WithdrawPaginationResponse {
+    status: String
+    message: String
+    data: [Withdraw]
+    pagination: PageInfo
+}
+
+type WithdrawDeleteAtPaginationResponse {
+    status: String
+    message: String
+    data: [WithdrawDeleteAt]
+    pagination: PageInfo
+}
+
+type WithdrawMonthlyAmountListApiResponse {
+    status: String
+    message: String
+    data: [WithdrawMonthlyAmount]
+}
+
+type WithdrawYearlyAmountListApiResponse {
+    status: String
+    message: String
+    data: [WithdrawYearlyAmount]
+}
+
+type WithdrawMonthStatusSuccessListApiResponse {
+    status: String
+    message: String
+    data: [WithdrawMonthStatusSuccess]
+}
+
+type WithdrawYearStatusSuccessListApiResponse {
+    status: String
+    message: String
+    data: [WithdrawYearStatusSuccess]
+}
+
+type WithdrawMonthStatusFailedListApiResponse {
+    status: String
+    message: String
+    data: [WithdrawMonthStatusFailed]
+}
+
+type WithdrawYearStatusFailedListApiResponse {
+    status: String
+    message: String
+    data: [WithdrawYearStatusFailed]
+}
+
+input CreateWithdrawInput {
+    cardNumber: String
+    withdrawAmount: Long
+    "ISO date-time string."
+    withdrawTime: String
+}
+
+input UpdateWithdrawInput {
+    withdrawId: Long
+    cardNumber: String
+    withdrawAmount: Long
+    "ISO date-time string."
+    withdrawTime: String
+}
+
+extend type Query {
+    "Mirrors GET /api/withdraws."
+    withdraws(input: PageInput): WithdrawPaginationResponse
+    "Mirrors GET /api/withdraws/{id}."
+    withdraw(id: Long!): WithdrawApiResponse
+    "Mirrors GET /api/withdraws/by-card/{cardNumber}."
+    withdrawsByCard(cardNumber: String!): WithdrawListApiResponse
+    "Mirrors GET /api/withdraws/active."
+    activeWithdraws(input: PageInput): WithdrawDeleteAtPaginationResponse
+    "Mirrors GET /api/withdraws/trashed."
+    trashedWithdraws(input: PageInput): WithdrawDeleteAtPaginationResponse
+    "Mirrors GET /api/withdraws/stats/amount/monthly."
+    withdrawMonthlyAmount(input: YearInput!): WithdrawMonthlyAmountListApiResponse
+    "Mirrors GET /api/withdraws/stats/amount/yearly."
+    withdrawYearlyAmount(input: YearInput!): WithdrawYearlyAmountListApiResponse
+    "Mirrors GET /api/withdraws/stats/amount/monthly/by-card."
+    withdrawMonthlyAmountByCard(input: YearMonthCardNumberIntInput): WithdrawMonthlyAmountListApiResponse
+    "Mirrors GET /api/withdraws/stats/amount/yearly/by-card."
+    withdrawYearlyAmountByCard(input: YearMonthCardNumberIntInput): WithdrawYearlyAmountListApiResponse
+    "Mirrors GET /api/withdraws/stats/status/monthly/success."
+    withdrawMonthlyStatusSuccess(input: YearMonthFilterInput): WithdrawMonthStatusSuccessListApiResponse
+    "Mirrors GET /api/withdraws/stats/status/yearly/success."
+    withdrawYearlyStatusSuccess(input: YearInput!): WithdrawYearStatusSuccessListApiResponse
+    "Mirrors GET /api/withdraws/stats/status/monthly/failed."
+    withdrawMonthlyStatusFailed(input: YearMonthFilterInput): WithdrawMonthStatusFailedListApiResponse
+    "Mirrors GET /api/withdraws/stats/status/yearly/failed."
+    withdrawYearlyStatusFailed(input: YearInput!): WithdrawYearStatusFailedListApiResponse
+    "Mirrors GET /api/withdraws/stats/status/monthly/success/by-card."
+    withdrawMonthlyStatusSuccessByCard(input: WithdrawCardNumberMonthInput): WithdrawMonthStatusSuccessListApiResponse
+    "Mirrors GET /api/withdraws/stats/status/yearly/success/by-card."
+    withdrawYearlyStatusSuccessByCard(input: YearMonthCardNumberIntInput): WithdrawYearStatusSuccessListApiResponse
+    "Mirrors GET /api/withdraws/stats/status/monthly/failed/by-card."
+    withdrawMonthlyStatusFailedByCard(input: WithdrawCardNumberMonthInput): WithdrawMonthStatusFailedListApiResponse
+    "Mirrors GET /api/withdraws/stats/status/yearly/failed/by-card."
+    withdrawYearlyStatusFailedByCard(input: YearMonthCardNumberIntInput): WithdrawYearStatusFailedListApiResponse
+}
+
+input YearMonthCardNumberIntInput {
+    cardNumber: String
+    year: Int
+}
+
+input WithdrawCardNumberMonthInput {
+    cardNumber: String
+    year: Int
+    month: Int
+}
+
+extend type Mutation {
+    "Mirrors POST /api/withdraws/create."
+    createWithdraw(input: CreateWithdrawInput!): WithdrawApiResponse
+    "Mirrors POST /api/withdraws/update."
+    updateWithdraw(input: UpdateWithdrawInput!): WithdrawApiResponse
+    "Mirrors POST /api/withdraws/trash/{id}."
+    trashWithdraw(id: Long!): WithdrawDeleteAtApiResponse
+    "Mirrors POST /api/withdraws/restore/{id}."
+    restoreWithdraw(id: Long!): WithdrawDeleteAtApiResponse
+    "Mirrors DELETE /api/withdraws/{id}."
+    deleteWithdrawPermanent(id: Long!): BooleanApiResponse
+    "Mirrors POST /api/withdraws/restore-all."
+    restoreAllWithdraws: BooleanApiResponse
+    "Mirrors POST /api/withdraws/delete-all."
+    deleteAllWithdrawsPermanent: BooleanApiResponse
+}

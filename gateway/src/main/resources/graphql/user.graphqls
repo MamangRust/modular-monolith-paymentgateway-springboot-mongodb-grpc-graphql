@@ -1,0 +1,92 @@
+type User {
+    id: Long
+    username: String
+    firstname: String
+    lastname: String
+    email: String
+    createdAt: String
+    updatedAt: String
+}
+
+type UserDeleteAt {
+    id: Long
+    firstname: String
+    lastname: String
+    email: String
+    createdAt: String
+    updatedAt: String
+    deletedAt: String
+}
+
+type UserApiResponse {
+    status: String
+    message: String
+    data: User
+}
+
+type UserDeleteAtApiResponse {
+    status: String
+    message: String
+    data: UserDeleteAt
+}
+
+type UserPaginationResponse {
+    status: String
+    message: String
+    data: [User]
+    pagination: PageInfo
+}
+
+type UserDeleteAtPaginationResponse {
+    status: String
+    message: String
+    data: [UserDeleteAt]
+    pagination: PageInfo
+}
+
+input CreateUserInput {
+    username: String
+    firstname: String
+    lastname: String
+    email: String
+    password: String
+    confirmPassword: String
+}
+
+input UpdateUserInput {
+    id: Long
+    username: String
+    firstname: String
+    lastname: String
+    email: String
+    password: String
+    confirmPassword: String
+}
+
+extend type Query {
+    "Mirrors GET /api/users."
+    users(input: PageInput): UserPaginationResponse
+    "Mirrors GET /api/users/{id}."
+    user(id: Long!): UserApiResponse
+    "Mirrors GET /api/users/active."
+    activeUsers(input: PageInput): UserDeleteAtPaginationResponse
+    "Mirrors GET /api/users/trashed."
+    trashedUsers(input: PageInput): UserDeleteAtPaginationResponse
+}
+
+extend type Mutation {
+    "Mirrors POST /api/users/create."
+    createUser(input: CreateUserInput!): UserApiResponse
+    "Mirrors POST /api/users/update."
+    updateUser(input: UpdateUserInput!): UserApiResponse
+    "Mirrors POST /api/users/trash/{id}."
+    trashUser(id: Long!): UserDeleteAtApiResponse
+    "Mirrors POST /api/users/restore/{id}."
+    restoreUser(id: Long!): UserDeleteAtApiResponse
+    "Mirrors DELETE /api/users/{id}."
+    deleteUserPermanent(id: Long!): BooleanApiResponse
+    "Mirrors POST /api/users/restore-all."
+    restoreAllUsers: BooleanApiResponse
+    "Mirrors POST /api/users/delete-all."
+    deleteAllUsersPermanent: BooleanApiResponse
+}

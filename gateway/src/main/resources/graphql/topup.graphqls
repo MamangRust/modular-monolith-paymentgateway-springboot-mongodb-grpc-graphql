@@ -1,0 +1,236 @@
+type Topup {
+    id: Long
+    cardNumber: String
+    topupNo: String
+    topupAmount: Long
+    topupMethod: String
+    topupTime: String
+    createdAt: String
+    updatedAt: String
+}
+
+type TopupDeleteAt {
+    id: Long
+    cardNumber: String
+    topupNo: String
+    topupAmount: Long
+    topupMethod: String
+    topupTime: String
+    createdAt: String
+    updatedAt: String
+    deletedAt: String
+}
+
+type TopupMonthAmount {
+    monthName: String
+    totalAmount: Long
+}
+
+type TopupYearlyAmount {
+    reportYear: String
+    totalAmount: Long
+}
+
+type TopupMonthMethod {
+    monthName: String
+    topupMethod: String
+    totalTopups: Long
+    totalAmount: Long
+}
+
+type TopupYearlyMethod {
+    reportYear: String
+    topupMethod: String
+    totalTopups: Long
+    totalAmount: Long
+}
+
+type TopupMonthStatusSuccess {
+    reportYear: String
+    monthName: String
+    totalAmount: Long
+    totalSuccess: Long
+}
+
+type TopupYearStatusSuccess {
+    reportYear: String
+    totalAmount: Long
+    totalSuccess: Long
+}
+
+type TopupMonthStatusFailed {
+    reportYear: String
+    monthName: String
+    totalAmount: Long
+    totalFailed: Long
+}
+
+type TopupYearStatusFailed {
+    reportYear: String
+    totalAmount: Long
+    totalFailed: Long
+}
+
+type TopupApiResponse {
+    status: String
+    message: String
+    data: Topup
+}
+
+type TopupDeleteAtApiResponse {
+    status: String
+    message: String
+    data: TopupDeleteAt
+}
+
+type TopupListApiResponse {
+    status: String
+    message: String
+    data: [Topup]
+}
+
+type TopupPaginationResponse {
+    status: String
+    message: String
+    data: [Topup]
+    pagination: PageInfo
+}
+
+type TopupDeleteAtPaginationResponse {
+    status: String
+    message: String
+    data: [TopupDeleteAt]
+    pagination: PageInfo
+}
+
+type TopupMonthAmountListApiResponse {
+    status: String
+    message: String
+    data: [TopupMonthAmount]
+}
+
+type TopupYearlyAmountListApiResponse {
+    status: String
+    message: String
+    data: [TopupYearlyAmount]
+}
+
+type TopupMonthMethodListApiResponse {
+    status: String
+    message: String
+    data: [TopupMonthMethod]
+}
+
+type TopupYearlyMethodListApiResponse {
+    status: String
+    message: String
+    data: [TopupYearlyMethod]
+}
+
+type TopupMonthStatusSuccessListApiResponse {
+    status: String
+    message: String
+    data: [TopupMonthStatusSuccess]
+}
+
+type TopupYearStatusSuccessListApiResponse {
+    status: String
+    message: String
+    data: [TopupYearStatusSuccess]
+}
+
+type TopupMonthStatusFailedListApiResponse {
+    status: String
+    message: String
+    data: [TopupMonthStatusFailed]
+}
+
+type TopupYearStatusFailedListApiResponse {
+    status: String
+    message: String
+    data: [TopupYearStatusFailed]
+}
+
+input CreateTopupInput {
+    cardNumber: String
+    topupAmount: Long
+    topupMethod: String
+}
+
+input UpdateTopupInput {
+    topupId: Long
+    cardNumber: String
+    topupAmount: Long
+    topupMethod: String
+}
+
+input TopupsByCardInput {
+    cardNumber: String
+    page: Int
+    pageSize: Int
+    search: String
+}
+
+extend type Query {
+    "Mirrors GET /api/topups."
+    topups(input: PageInput): TopupPaginationResponse
+    "Mirrors GET /api/topups/by-card."
+    topupsByCard(input: TopupsByCardInput): TopupPaginationResponse
+    "Mirrors GET /api/topups/active."
+    activeTopups(input: PageInput): TopupDeleteAtPaginationResponse
+    "Mirrors GET /api/topups/trashed."
+    trashedTopups(input: PageInput): TopupDeleteAtPaginationResponse
+    "Mirrors GET /api/topups/{id}."
+    topup(id: Long!): TopupApiResponse
+    "Mirrors GET /api/topups/card/{cardNumber}."
+    topupByCard(cardNumber: String!): TopupListApiResponse
+    "Mirrors GET /api/topups/stats/amount/monthly."
+    topupMonthlyAmount(input: YearInput!): TopupMonthAmountListApiResponse
+    "Mirrors GET /api/topups/stats/amount/yearly."
+    topupYearlyAmount(input: YearInput!): TopupYearlyAmountListApiResponse
+    "Mirrors GET /api/topups/stats/amount/monthly/by-card."
+    topupMonthlyAmountByCard(input: CardNumberYearInput): TopupMonthAmountListApiResponse
+    "Mirrors GET /api/topups/stats/amount/yearly/by-card."
+    topupYearlyAmountByCard(input: CardNumberYearInput): TopupYearlyAmountListApiResponse
+    "Mirrors GET /api/topups/stats/method/monthly."
+    topupMonthlyMethod(input: YearInput!): TopupMonthMethodListApiResponse
+    "Mirrors GET /api/topups/stats/method/yearly."
+    topupYearlyMethod(input: YearInput!): TopupYearlyMethodListApiResponse
+    "Mirrors GET /api/topups/stats/method/monthly/by-card."
+    topupMonthlyMethodByCard(input: CardNumberYearInput): TopupMonthMethodListApiResponse
+    "Mirrors GET /api/topups/stats/method/yearly/by-card."
+    topupYearlyMethodByCard(input: CardNumberYearInput): TopupYearlyMethodListApiResponse
+    "Mirrors GET /api/topups/stats/status/monthly/success."
+    topupMonthlyStatusSuccess(input: YearMonthFilterInput): TopupMonthStatusSuccessListApiResponse
+    "Mirrors GET /api/topups/stats/status/yearly/success."
+    topupYearlyStatusSuccess(input: YearInput!): TopupYearStatusSuccessListApiResponse
+    "Mirrors GET /api/topups/stats/status/monthly/failed."
+    topupMonthlyStatusFailed(input: YearMonthFilterInput): TopupMonthStatusFailedListApiResponse
+    "Mirrors GET /api/topups/stats/status/yearly/failed."
+    topupYearlyStatusFailed(input: YearInput!): TopupYearStatusFailedListApiResponse
+    "Mirrors GET /api/topups/stats/status/monthly/success/by-card."
+    topupMonthlyStatusSuccessByCard(input: CardNumberYearMonthInput): TopupMonthStatusSuccessListApiResponse
+    "Mirrors GET /api/topups/stats/status/yearly/success/by-card."
+    topupYearlyStatusSuccessByCard(input: CardNumberYearInput): TopupYearStatusSuccessListApiResponse
+    "Mirrors GET /api/topups/stats/status/monthly/failed/by-card."
+    topupMonthlyStatusFailedByCard(input: CardNumberYearMonthInput): TopupMonthStatusFailedListApiResponse
+    "Mirrors GET /api/topups/stats/status/yearly/failed/by-card."
+    topupYearlyStatusFailedByCard(input: CardNumberYearInput): TopupYearStatusFailedListApiResponse
+}
+
+extend type Mutation {
+    "Mirrors POST /api/topups/create."
+    createTopup(input: CreateTopupInput!): TopupApiResponse
+    "Mirrors POST /api/topups/update."
+    updateTopup(input: UpdateTopupInput!): TopupApiResponse
+    "Mirrors POST /api/topups/trash/{id}."
+    trashTopup(id: Long!): TopupDeleteAtApiResponse
+    "Mirrors POST /api/topups/restore/{id}."
+    restoreTopup(id: Long!): TopupDeleteAtApiResponse
+    "Mirrors DELETE /api/topups/{id}."
+    deleteTopupPermanent(id: Long!): BooleanApiResponse
+    "Mirrors POST /api/topups/restore-all."
+    restoreAllTopups: BooleanApiResponse
+    "Mirrors POST /api/topups/delete-all."
+    deleteAllTopupsPermanent: BooleanApiResponse
+}

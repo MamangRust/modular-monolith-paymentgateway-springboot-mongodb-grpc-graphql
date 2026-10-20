@@ -1,0 +1,226 @@
+type Card {
+    id: Long
+    userId: Long
+    cardNumber: String
+    cardType: String
+    expireDate: String
+    cvv: String
+    cardProvider: String
+    createdAt: String
+    updatedAt: String
+}
+
+type CardDeleteAt {
+    id: Long
+    userId: Long
+    cardNumber: String
+    cardType: String
+    expireDate: String
+    cvv: String
+    cardProvider: String
+    createdAt: String
+    updatedAt: String
+    deletedAt: String
+}
+
+type CardDashboard {
+    totalBalance: Long
+    totalTopup: Long
+    totalWithdraw: Long
+    totalTransaction: Long
+    totalTransfer: Long
+}
+
+type CardDashboardCard {
+    totalBalance: Long
+    totalTopup: Long
+    totalWithdraw: Long
+    totalTransaction: Long
+    totalTransferSend: Long
+    totalTransferReceiver: Long
+}
+
+type CardMonthAmount {
+    monthName: String
+    totalAmount: Long
+}
+
+type CardYearAmount {
+    reportYear: String
+    totalAmount: Long
+}
+
+type CardMonthBalance {
+    monthName: String
+    totalBalance: Long
+}
+
+type CardYearBalance {
+    reportYear: String
+    totalBalance: Long
+}
+
+type CardApiResponse {
+    status: String
+    message: String
+    data: Card
+}
+
+type CardDeleteAtApiResponse {
+    status: String
+    message: String
+    data: CardDeleteAt
+}
+
+type CardDashboardApiResponse {
+    status: String
+    message: String
+    data: CardDashboard
+}
+
+type CardDashboardCardApiResponse {
+    status: String
+    message: String
+    data: CardDashboardCard
+}
+
+type CardPaginationResponse {
+    status: String
+    message: String
+    data: [Card]
+    pagination: PageInfo
+}
+
+type CardDeleteAtPaginationResponse {
+    status: String
+    message: String
+    data: [CardDeleteAt]
+    pagination: PageInfo
+}
+
+type CardMonthAmountListApiResponse {
+    status: String
+    message: String
+    data: [CardMonthAmount]
+}
+
+type CardYearAmountListApiResponse {
+    status: String
+    message: String
+    data: [CardYearAmount]
+}
+
+type CardMonthBalanceListApiResponse {
+    status: String
+    message: String
+    data: [CardMonthBalance]
+}
+
+type CardYearBalanceListApiResponse {
+    status: String
+    message: String
+    data: [CardYearBalance]
+}
+
+input CreateCardInput {
+    userId: Long
+    cardType: String
+    "ISO date string, e.g. 2027-12-31."
+    expireDate: String
+    cvv: String
+    cardProvider: String
+}
+
+input UpdateCardInput {
+    cardId: Long
+    userId: Long
+    cardType: String
+    "ISO date string, e.g. 2027-12-31."
+    expireDate: String
+    cvv: String
+    cardProvider: String
+}
+
+extend type Query {
+    "Mirrors GET /api/cards."
+    cards(input: PageInput): CardPaginationResponse
+    "Mirrors GET /api/cards/{id}."
+    card(id: Long!): CardApiResponse
+    "Mirrors GET /api/cards/by-user/{user_id}."
+    cardByUser(userId: Long!): CardApiResponse
+    "Mirrors GET /api/cards/by-number/{card_number}."
+    cardByNumber(cardNumber: String!): CardApiResponse
+    "Mirrors GET /api/cards/active."
+    activeCards(input: PageInput): CardDeleteAtPaginationResponse
+    "Mirrors GET /api/cards/trashed."
+    trashedCards(input: PageInput): CardDeleteAtPaginationResponse
+    "Mirrors GET /api/cards/dashboard."
+    cardDashboard: CardDashboardApiResponse
+    "Mirrors GET /api/cards/dashboard/{card_number}."
+    cardDashboardByCardNumber(cardNumber: String!): CardDashboardCardApiResponse
+    "Mirrors GET /api/cards/stats/balance/monthly."
+    cardMonthlyBalance(input: YearInput!): CardMonthBalanceListApiResponse
+    "Mirrors GET /api/cards/stats/balance/yearly."
+    cardYearlyBalance(input: YearInput!): CardYearBalanceListApiResponse
+    "Mirrors GET /api/cards/stats/balance/monthly/by-card."
+    cardMonthlyBalanceByCard(input: CardNumberYearInput): CardMonthBalanceListApiResponse
+    "Mirrors GET /api/cards/stats/balance/yearly/by-card."
+    cardYearlyBalanceByCard(input: CardNumberYearInput): CardYearBalanceListApiResponse
+    "Mirrors GET /api/cards/stats/topup/monthly."
+    cardMonthlyTopupAmount(input: YearInput!): CardMonthAmountListApiResponse
+    "Mirrors GET /api/cards/stats/topup/yearly."
+    cardYearlyTopupAmount(input: YearInput!): CardYearAmountListApiResponse
+    "Mirrors GET /api/cards/stats/topup/monthly/by-card."
+    cardMonthlyTopupAmountByCard(input: CardNumberYearInput): CardMonthAmountListApiResponse
+    "Mirrors GET /api/cards/stats/topup/yearly/by-card."
+    cardYearlyTopupAmountByCard(input: CardNumberYearInput): CardYearAmountListApiResponse
+    "Mirrors GET /api/cards/stats/transaction/monthly."
+    cardMonthlyTransactionAmount(input: YearInput!): CardMonthAmountListApiResponse
+    "Mirrors GET /api/cards/stats/transaction/yearly."
+    cardYearlyTransactionAmount(input: YearInput!): CardYearAmountListApiResponse
+    "Mirrors GET /api/cards/stats/transaction/monthly/by-card."
+    cardMonthlyTransactionAmountByCard(input: CardNumberYearInput): CardMonthAmountListApiResponse
+    "Mirrors GET /api/cards/stats/transaction/yearly/by-card."
+    cardYearlyTransactionAmountByCard(input: CardNumberYearInput): CardYearAmountListApiResponse
+    "Mirrors GET /api/cards/stats/transfer/monthly/sender."
+    cardMonthlyTransferAmountSender(input: YearInput!): CardMonthAmountListApiResponse
+    "Mirrors GET /api/cards/stats/transfer/monthly/receiver."
+    cardMonthlyTransferAmountReceiver(input: YearInput!): CardMonthAmountListApiResponse
+    "Mirrors GET /api/cards/stats/transfer/yearly/sender."
+    cardYearlyTransferAmountSender(input: YearInput!): CardYearAmountListApiResponse
+    "Mirrors GET /api/cards/stats/transfer/yearly/receiver."
+    cardYearlyTransferAmountReceiver(input: YearInput!): CardYearAmountListApiResponse
+    "Mirrors GET /api/cards/stats/transfer/monthly/by-card/sender."
+    cardMonthlyTransferAmountByCardSender(input: CardNumberYearInput): CardMonthAmountListApiResponse
+    "Mirrors GET /api/cards/stats/transfer/monthly/by-card/receiver."
+    cardMonthlyTransferAmountByCardReceiver(input: CardNumberYearInput): CardMonthAmountListApiResponse
+    "Mirrors GET /api/cards/stats/transfer/yearly/by-card/sender."
+    cardYearlyTransferAmountByCardSender(input: CardNumberYearInput): CardYearAmountListApiResponse
+    "Mirrors GET /api/cards/stats/transfer/yearly/by-card/receiver."
+    cardYearlyTransferAmountByCardReceiver(input: CardNumberYearInput): CardYearAmountListApiResponse
+    "Mirrors GET /api/cards/stats/withdraw/monthly."
+    cardMonthlyWithdrawAmount(input: YearInput!): CardMonthAmountListApiResponse
+    "Mirrors GET /api/cards/stats/withdraw/yearly."
+    cardYearlyWithdrawAmount(input: YearInput!): CardYearAmountListApiResponse
+    "Mirrors GET /api/cards/stats/withdraw/monthly/by-card."
+    cardMonthlyWithdrawAmountByCard(input: CardNumberYearInput): CardMonthAmountListApiResponse
+    "Mirrors GET /api/cards/stats/withdraw/yearly/by-card."
+    cardYearlyWithdrawAmountByCard(input: CardNumberYearInput): CardYearAmountListApiResponse
+}
+
+extend type Mutation {
+    "Mirrors POST /api/cards/create."
+    createCard(input: CreateCardInput!): CardApiResponse
+    "Mirrors POST /api/cards/update."
+    updateCard(input: UpdateCardInput!): CardApiResponse
+    "Mirrors POST /api/cards/trash/{id}."
+    trashCard(id: Long!): CardDeleteAtApiResponse
+    "Mirrors POST /api/cards/restore/{id}."
+    restoreCard(id: Long!): CardDeleteAtApiResponse
+    "Mirrors DELETE /api/cards/{id}."
+    deleteCardPermanent(id: Long!): BooleanApiResponse
+    "Mirrors POST /api/cards/restore-all."
+    restoreAllCards: BooleanApiResponse
+    "Mirrors POST /api/cards/delete-all."
+    deleteAllCardsPermanent: BooleanApiResponse
+}

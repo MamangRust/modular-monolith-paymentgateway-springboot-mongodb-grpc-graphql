@@ -1,0 +1,244 @@
+type Transaction {
+    id: Long
+    transactionNo: String
+    cardNumber: String
+    amount: Long
+    paymentMethod: String
+    merchantId: Long
+    transactionTime: String
+    createdAt: String
+    updatedAt: String
+}
+
+type TransactionDeleteAt {
+    id: Long
+    transactionNo: String
+    cardNumber: String
+    amount: Long
+    paymentMethod: String
+    merchantId: Long
+    transactionTime: String
+    createdAt: String
+    updatedAt: String
+    deletedAt: String
+}
+
+type TransactionMonthAmount {
+    monthName: String
+    totalAmount: Long
+}
+
+type TransactionYearlyAmount {
+    reportYear: String
+    totalAmount: Long
+}
+
+type TransactionMonthMethod {
+    monthName: String
+    paymentMethod: String
+    totalTransactions: Long
+    totalAmount: Long
+}
+
+type TransactionYearMethod {
+    reportYear: String
+    paymentMethod: String
+    totalTransactions: Long
+    totalAmount: Long
+}
+
+type TransactionMonthStatusSuccess {
+    reportYear: String
+    monthName: String
+    totalAmount: Long
+    totalSuccess: Long
+}
+
+type TransactionYearStatusSuccess {
+    reportYear: String
+    totalAmount: Long
+    totalSuccess: Long
+}
+
+type TransactionMonthStatusFailed {
+    reportYear: String
+    monthName: String
+    totalAmount: Long
+    totalFailed: Long
+}
+
+type TransactionYearStatusFailed {
+    reportYear: String
+    totalAmount: Long
+    totalFailed: Long
+}
+
+type TransactionApiResponse {
+    status: String
+    message: String
+    data: Transaction
+}
+
+type TransactionDeleteAtApiResponse {
+    status: String
+    message: String
+    data: TransactionDeleteAt
+}
+
+type TransactionListApiResponse {
+    status: String
+    message: String
+    data: [Transaction]
+}
+
+type TransactionPaginationResponse {
+    status: String
+    message: String
+    data: [Transaction]
+    pagination: PageInfo
+}
+
+type TransactionDeleteAtPaginationResponse {
+    status: String
+    message: String
+    data: [TransactionDeleteAt]
+    pagination: PageInfo
+}
+
+type TransactionMonthAmountListApiResponse {
+    status: String
+    message: String
+    data: [TransactionMonthAmount]
+}
+
+type TransactionYearlyAmountListApiResponse {
+    status: String
+    message: String
+    data: [TransactionYearlyAmount]
+}
+
+type TransactionMonthMethodListApiResponse {
+    status: String
+    message: String
+    data: [TransactionMonthMethod]
+}
+
+type TransactionYearMethodListApiResponse {
+    status: String
+    message: String
+    data: [TransactionYearMethod]
+}
+
+type TransactionMonthStatusSuccessListApiResponse {
+    status: String
+    message: String
+    data: [TransactionMonthStatusSuccess]
+}
+
+type TransactionYearStatusSuccessListApiResponse {
+    status: String
+    message: String
+    data: [TransactionYearStatusSuccess]
+}
+
+type TransactionMonthStatusFailedListApiResponse {
+    status: String
+    message: String
+    data: [TransactionMonthStatusFailed]
+}
+
+type TransactionYearStatusFailedListApiResponse {
+    status: String
+    message: String
+    data: [TransactionYearStatusFailed]
+}
+
+input TransactionsByCardInput {
+    cardNumber: String
+    page: Int
+    pageSize: Int
+    search: String
+}
+
+input CreateTransactionInput {
+    cardNumber: String
+    amount: Long
+    paymentMethod: String
+    merchantId: Long
+    "ISO date-time string."
+    transactionTime: String
+}
+
+input UpdateTransactionInput {
+    transactionId: Long
+    cardNumber: String
+    amount: Long
+    paymentMethod: String
+    merchantId: Long
+    "ISO date-time string."
+    transactionTime: String
+}
+
+extend type Query {
+    "Mirrors GET /api/transactions."
+    transactions(input: PageInput): TransactionPaginationResponse
+    "Mirrors GET /api/transactions/by-card."
+    transactionsByCard(input: TransactionsByCardInput): TransactionPaginationResponse
+    "Mirrors GET /api/transactions/active."
+    activeTransactions(input: PageInput): TransactionDeleteAtPaginationResponse
+    "Mirrors GET /api/transactions/trashed."
+    trashedTransactions(input: PageInput): TransactionDeleteAtPaginationResponse
+    "Mirrors GET /api/transactions/{id}."
+    transaction(id: Long!): TransactionApiResponse
+    "Mirrors GET /api/transactions/merchant/{merchantId}."
+    transactionsByMerchantId(merchantId: Long!): TransactionListApiResponse
+    "Mirrors GET /api/transactions/stats/amount/monthly."
+    transactionMonthlyAmount(input: YearInput!): TransactionMonthAmountListApiResponse
+    "Mirrors GET /api/transactions/stats/amount/yearly."
+    transactionYearlyAmount(input: YearInput!): TransactionYearlyAmountListApiResponse
+    "Mirrors GET /api/transactions/stats/amount/monthly/by-card."
+    transactionMonthlyAmountByCard(input: CardNumberYearInput): TransactionMonthAmountListApiResponse
+    "Mirrors GET /api/transactions/stats/amount/yearly/by-card."
+    transactionYearlyAmountByCard(input: CardNumberYearInput): TransactionYearlyAmountListApiResponse
+    "Mirrors GET /api/transactions/stats/method/monthly."
+    transactionMonthlyMethod(input: YearInput!): TransactionMonthMethodListApiResponse
+    "Mirrors GET /api/transactions/stats/method/yearly."
+    transactionYearlyMethod(input: YearInput!): TransactionYearMethodListApiResponse
+    "Mirrors GET /api/transactions/stats/method/monthly/by-card."
+    transactionMonthlyMethodByCard(input: CardNumberYearInput): TransactionMonthMethodListApiResponse
+    "Mirrors GET /api/transactions/stats/method/yearly/by-card."
+    transactionYearlyMethodByCard(input: CardNumberYearInput): TransactionYearMethodListApiResponse
+    "Mirrors GET /api/transactions/stats/status/monthly/success."
+    transactionMonthlyStatusSuccess(input: YearMonthFilterInput): TransactionMonthStatusSuccessListApiResponse
+    "Mirrors GET /api/transactions/stats/status/yearly/success."
+    transactionYearlyStatusSuccess(input: YearInput!): TransactionYearStatusSuccessListApiResponse
+    "Mirrors GET /api/transactions/stats/status/monthly/failed."
+    transactionMonthlyStatusFailed(input: YearMonthFilterInput): TransactionMonthStatusFailedListApiResponse
+    "Mirrors GET /api/transactions/stats/status/yearly/failed."
+    transactionYearlyStatusFailed(input: YearInput!): TransactionYearStatusFailedListApiResponse
+    "Mirrors GET /api/transactions/stats/status/monthly/success/by-card."
+    transactionMonthlyStatusSuccessByCard(input: CardNumberYearMonthInput): TransactionMonthStatusSuccessListApiResponse
+    "Mirrors GET /api/transactions/stats/status/yearly/success/by-card."
+    transactionYearlyStatusSuccessByCard(input: CardNumberYearInput): TransactionYearStatusSuccessListApiResponse
+    "Mirrors GET /api/transactions/stats/status/monthly/failed/by-card."
+    transactionMonthlyStatusFailedByCard(input: CardNumberYearMonthInput): TransactionMonthStatusFailedListApiResponse
+    "Mirrors GET /api/transactions/stats/status/yearly/failed/by-card."
+    transactionYearlyStatusFailedByCard(input: CardNumberYearInput): TransactionYearStatusFailedListApiResponse
+}
+
+extend type Mutation {
+    "Mirrors POST /api/transactions/create (X-api-Key header)."
+    createTransaction(apiKey: String, input: CreateTransactionInput!): TransactionApiResponse
+    "Mirrors POST /api/transactions/update (X-api-Key header)."
+    updateTransaction(apiKey: String, input: UpdateTransactionInput!): TransactionApiResponse
+    "Mirrors POST /api/transactions/trash/{id}."
+    trashTransaction(id: Long!): TransactionDeleteAtApiResponse
+    "Mirrors POST /api/transactions/restore/{id}."
+    restoreTransaction(id: Long!): TransactionDeleteAtApiResponse
+    "Mirrors DELETE /api/transactions/{id}."
+    deleteTransactionPermanent(id: Long!): BooleanApiResponse
+    "Mirrors POST /api/transactions/restore-all."
+    restoreAllTransactions: BooleanApiResponse
+    "Mirrors POST /api/transactions/delete-all."
+    deleteAllTransactionsPermanent: BooleanApiResponse
+}

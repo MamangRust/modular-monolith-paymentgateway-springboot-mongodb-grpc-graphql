@@ -1,0 +1,251 @@
+type Merchant {
+    id: Long
+    name: String
+    userId: Long
+    apiKey: String
+    status: String
+    createdAt: String
+    updatedAt: String
+}
+
+type MerchantDeleteAt {
+    id: Long
+    name: String
+    userId: Long
+    apiKey: String
+    status: String
+    createdAt: String
+    updatedAt: String
+    deletedAt: String
+}
+
+type MerchantTransaction {
+    id: Long
+    cardNumber: String
+    amount: Long
+    paymentMethod: String
+    merchantId: Long
+    merchantName: String
+    transactionTime: String
+    createdAt: String
+    updatedAt: String
+    deletedAt: String
+}
+
+type MerchantMonthlyAmount {
+    monthName: String
+    totalAmount: Long
+}
+
+type MerchantYearlyAmount {
+    reportYear: String
+    totalAmount: Long
+}
+
+type MerchantMonthlyPaymentMethod {
+    monthName: String
+    paymentMethod: String
+    totalAmount: Long
+}
+
+type MerchantYearlyPaymentMethod {
+    reportYear: String
+    paymentMethod: String
+    totalAmount: Long
+}
+
+type MerchantMonthlyTotalAmount {
+    reportYear: String
+    monthName: String
+    totalAmount: Long
+}
+
+type MerchantYearlyTotalAmount {
+    reportYear: String
+    totalAmount: Long
+}
+
+type MerchantApiResponse {
+    status: String
+    message: String
+    data: Merchant
+}
+
+type MerchantDeleteAtApiResponse {
+    status: String
+    message: String
+    data: MerchantDeleteAt
+}
+
+type MerchantListApiResponse {
+    status: String
+    message: String
+    data: [Merchant]
+}
+
+type MerchantPaginationResponse {
+    status: String
+    message: String
+    data: [Merchant]
+    pagination: PageInfo
+}
+
+type MerchantDeleteAtPaginationResponse {
+    status: String
+    message: String
+    data: [MerchantDeleteAt]
+    pagination: PageInfo
+}
+
+type MerchantTransactionPaginationResponse {
+    status: String
+    message: String
+    data: [MerchantTransaction]
+    pagination: PageInfo
+}
+
+type MerchantMonthlyAmountListApiResponse {
+    status: String
+    message: String
+    data: [MerchantMonthlyAmount]
+}
+
+type MerchantYearlyAmountListApiResponse {
+    status: String
+    message: String
+    data: [MerchantYearlyAmount]
+}
+
+type MerchantMonthlyPaymentMethodListApiResponse {
+    status: String
+    message: String
+    data: [MerchantMonthlyPaymentMethod]
+}
+
+type MerchantYearlyPaymentMethodListApiResponse {
+    status: String
+    message: String
+    data: [MerchantYearlyPaymentMethod]
+}
+
+type MerchantMonthlyTotalAmountListApiResponse {
+    status: String
+    message: String
+    data: [MerchantMonthlyTotalAmount]
+}
+
+type MerchantYearlyTotalAmountListApiResponse {
+    status: String
+    message: String
+    data: [MerchantYearlyTotalAmount]
+}
+
+input CreateMerchantInput {
+    name: String
+    userId: Long
+}
+
+input UpdateMerchantInput {
+    merchantId: Long
+    name: String
+    userId: Long
+    status: String
+}
+
+input MerchantIdYearInput {
+    merchantId: Long
+    year: Long
+}
+
+input ApiKeyYearInput {
+    apiKey: String
+    year: Long
+}
+
+input MerchantTransactionsByIdInput {
+    merchantId: Long
+    page: Int
+    pageSize: Int
+    search: String
+}
+
+input MerchantTransactionsByApiKeyInput {
+    apiKey: String
+    page: Int
+    pageSize: Int
+    search: String
+}
+
+extend type Query {
+    "Mirrors GET /api/merchants."
+    merchants(input: PageInput): MerchantPaginationResponse
+    "Mirrors GET /api/merchants/active."
+    activeMerchants(input: PageInput): MerchantDeleteAtPaginationResponse
+    "Mirrors GET /api/merchants/trashed."
+    trashedMerchants(input: PageInput): MerchantDeleteAtPaginationResponse
+    "Mirrors GET /api/merchants/{id}."
+    merchant(id: Long!): MerchantApiResponse
+    "Mirrors GET /api/merchants/by-api-key."
+    merchantByApiKey(apiKey: String!): MerchantApiResponse
+    "Mirrors GET /api/merchants/by-user/{userId}."
+    merchantByUserId(userId: Long!): MerchantListApiResponse
+    "Mirrors GET /api/merchants/transactions."
+    merchantTransactions(input: PageInput): MerchantTransactionPaginationResponse
+    "Mirrors GET /api/merchants/transactions/by-id."
+    merchantTransactionsById(input: MerchantTransactionsByIdInput): MerchantTransactionPaginationResponse
+    "Mirrors GET /api/merchants/transactions/by-api-key."
+    merchantTransactionsByApiKey(input: MerchantTransactionsByApiKeyInput): MerchantTransactionPaginationResponse
+    "Mirrors GET /api/merchants/stats/amount/monthly."
+    merchantMonthlyAmount(input: YearInput!): MerchantMonthlyAmountListApiResponse
+    "Mirrors GET /api/merchants/stats/amount/yearly."
+    merchantYearlyAmount(input: YearInput!): MerchantYearlyAmountListApiResponse
+    "Mirrors GET /api/merchants/stats/amount/by-id."
+    merchantMonthlyAmountById(input: MerchantIdYearInput): MerchantMonthlyAmountListApiResponse
+    "Mirrors GET /api/merchants/stats/amount/yearly/by-id."
+    merchantYearlyAmountById(input: MerchantIdYearInput): MerchantYearlyAmountListApiResponse
+    "Mirrors GET /api/merchants/stats/amount/by-api-key."
+    merchantMonthlyAmountByApiKey(input: ApiKeyYearInput): MerchantMonthlyAmountListApiResponse
+    "Mirrors GET /api/merchants/stats/amount/yearly/by-api-key."
+    merchantYearlyAmountByApiKey(input: ApiKeyYearInput): MerchantYearlyAmountListApiResponse
+    "Mirrors GET /api/merchants/stats/method/monthly."
+    merchantMonthlyMethod(input: YearInput!): MerchantMonthlyPaymentMethodListApiResponse
+    "Mirrors GET /api/merchants/stats/method/yearly."
+    merchantYearlyMethod(input: YearInput!): MerchantYearlyPaymentMethodListApiResponse
+    "Mirrors GET /api/merchants/stats/method/monthly/by-id."
+    merchantMonthlyMethodById(input: MerchantIdYearInput): MerchantMonthlyPaymentMethodListApiResponse
+    "Mirrors GET /api/merchants/stats/method/yearly/by-id."
+    merchantYearlyMethodById(input: MerchantIdYearInput): MerchantYearlyPaymentMethodListApiResponse
+    "Mirrors GET /api/merchants/stats/method/monthly/by-api-key."
+    merchantMonthlyMethodByApiKey(input: ApiKeyYearInput): MerchantMonthlyPaymentMethodListApiResponse
+    "Mirrors GET /api/merchants/stats/method/yearly/by-api-key."
+    merchantYearlyMethodByApiKey(input: ApiKeyYearInput): MerchantYearlyPaymentMethodListApiResponse
+    "Mirrors GET /api/merchants/stats/total-amount/monthly."
+    merchantMonthlyTotalAmount(input: YearInput!): MerchantMonthlyTotalAmountListApiResponse
+    "Mirrors GET /api/merchants/stats/total-amount/yearly."
+    merchantYearlyTotalAmount(input: YearInput!): MerchantYearlyTotalAmountListApiResponse
+    "Mirrors GET /api/merchants/stats/total-amount/monthly/by-id."
+    merchantMonthlyTotalAmountById(input: MerchantIdYearInput): MerchantMonthlyTotalAmountListApiResponse
+    "Mirrors GET /api/merchants/stats/total-amount/yearly/by-id."
+    merchantYearlyTotalAmountById(input: MerchantIdYearInput): MerchantYearlyTotalAmountListApiResponse
+    "Mirrors GET /api/merchants/stats/total-amount/monthly/by-api-key."
+    merchantMonthlyTotalAmountByApiKey(input: ApiKeyYearInput): MerchantMonthlyTotalAmountListApiResponse
+    "Mirrors GET /api/merchants/stats/total-amount/yearly/by-api-key."
+    merchantYearlyTotalAmountByApiKey(input: ApiKeyYearInput): MerchantYearlyTotalAmountListApiResponse
+}
+
+extend type Mutation {
+    "Mirrors POST /api/merchants/create."
+    createMerchant(input: CreateMerchantInput!): MerchantApiResponse
+    "Mirrors POST /api/merchants/update."
+    updateMerchant(input: UpdateMerchantInput!): MerchantApiResponse
+    "Mirrors POST /api/merchants/trash/{id}."
+    trashMerchant(id: Long!): MerchantDeleteAtApiResponse
+    "Mirrors POST /api/merchants/restore/{id}."
+    restoreMerchant(id: Long!): MerchantDeleteAtApiResponse
+    "Mirrors DELETE /api/merchants/{id}."
+    deleteMerchantPermanent(id: Long!): BooleanApiResponse
+    "Mirrors POST /api/merchants/restore-all."
+    restoreAllMerchants: BooleanApiResponse
+    "Mirrors POST /api/merchants/delete-all."
+    deleteAllMerchantsPermanent: BooleanApiResponse
+}

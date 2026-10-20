@@ -1,0 +1,87 @@
+type Role {
+    id: Long
+    name: String
+    createdAt: String
+    updatedAt: String
+}
+
+type RoleDeleteAt {
+    id: Long
+    name: String
+    createdAt: String
+    updatedAt: String
+    deletedAt: String
+}
+
+type RoleApiResponse {
+    status: String
+    message: String
+    data: Role
+}
+
+type RoleDeleteAtApiResponse {
+    status: String
+    message: String
+    data: RoleDeleteAt
+}
+
+type RoleListApiResponse {
+    status: String
+    message: String
+    data: [Role]
+}
+
+type RolePaginationResponse {
+    status: String
+    message: String
+    data: [Role]
+    pagination: PageInfo
+}
+
+type RoleDeleteAtPaginationResponse {
+    status: String
+    message: String
+    data: [RoleDeleteAt]
+    pagination: PageInfo
+}
+
+input CreateRoleInput {
+    name: String
+}
+
+input UpdateRoleInput {
+    id: Long
+    name: String
+}
+
+extend type Query {
+    "Mirrors GET /api/roles."
+    roles(input: PageInput): RolePaginationResponse
+    "Mirrors GET /api/roles/active."
+    activeRoles(input: PageInput): RoleDeleteAtPaginationResponse
+    "Mirrors GET /api/roles/trashed."
+    trashedRoles(input: PageInput): RoleDeleteAtPaginationResponse
+    "Mirrors GET /api/roles/{id}."
+    role(id: Long!): RoleApiResponse
+    "Mirrors GET /api/roles/by-user/{userId}."
+    rolesByUser(userId: Long!): RoleListApiResponse
+    "Mirrors GET /api/roles/by-name."
+    roleByName(name: String!): RoleApiResponse
+}
+
+extend type Mutation {
+    "Mirrors POST /api/roles/create."
+    createRole(input: CreateRoleInput!): RoleApiResponse
+    "Mirrors POST /api/roles/update."
+    updateRole(input: UpdateRoleInput!): RoleApiResponse
+    "Mirrors POST /api/roles/trash/{id}."
+    trashRole(id: Long!): RoleDeleteAtApiResponse
+    "Mirrors POST /api/roles/restore/{id}."
+    restoreRole(id: Long!): RoleDeleteAtApiResponse
+    "Mirrors DELETE /api/roles/{id}."
+    deleteRolePermanent(id: Long!): BooleanApiResponse
+    "Mirrors POST /api/roles/restore-all."
+    restoreAllRoles: BooleanApiResponse
+    "Mirrors POST /api/roles/delete-all."
+    deleteAllRolesPermanent: BooleanApiResponse
+}

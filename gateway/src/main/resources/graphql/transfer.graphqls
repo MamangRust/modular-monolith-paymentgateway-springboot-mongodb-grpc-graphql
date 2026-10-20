@@ -1,0 +1,215 @@
+type Transfer {
+    id: Long
+    transferNo: String
+    transferFrom: String
+    transferTo: String
+    transferAmount: Long
+    transferTime: String
+    createdAt: String
+    updatedAt: String
+}
+
+type TransferDeleteAt {
+    id: Long
+    transferNo: String
+    transferFrom: String
+    transferTo: String
+    transferAmount: Long
+    transferTime: String
+    createdAt: String
+    updatedAt: String
+    deletedAt: String
+}
+
+type TransferMonthAmount {
+    monthName: String
+    totalAmount: Long
+}
+
+type TransferYearAmount {
+    reportYear: String
+    totalAmount: Long
+}
+
+type TransferMonthStatusSuccess {
+    reportYear: String
+    monthName: String
+    totalAmount: Long
+    totalSuccess: Long
+}
+
+type TransferYearStatusSuccess {
+    reportYear: String
+    totalAmount: Long
+    totalSuccess: Long
+}
+
+type TransferMonthStatusFailed {
+    reportYear: String
+    monthName: String
+    totalAmount: Long
+    totalFailed: Long
+}
+
+type TransferYearStatusFailed {
+    reportYear: String
+    totalAmount: Long
+    totalFailed: Long
+}
+
+type TransferApiResponse {
+    status: String
+    message: String
+    data: Transfer
+}
+
+type TransferDeleteAtApiResponse {
+    status: String
+    message: String
+    data: TransferDeleteAt
+}
+
+type TransferListApiResponse {
+    status: String
+    message: String
+    data: [Transfer]
+}
+
+type TransferPaginationResponse {
+    status: String
+    message: String
+    data: [Transfer]
+    pagination: PageInfo
+}
+
+type TransferDeleteAtPaginationResponse {
+    status: String
+    message: String
+    data: [TransferDeleteAt]
+    pagination: PageInfo
+}
+
+type TransferMonthAmountListApiResponse {
+    status: String
+    message: String
+    data: [TransferMonthAmount]
+}
+
+type TransferYearAmountListApiResponse {
+    status: String
+    message: String
+    data: [TransferYearAmount]
+}
+
+type TransferMonthStatusSuccessListApiResponse {
+    status: String
+    message: String
+    data: [TransferMonthStatusSuccess]
+}
+
+type TransferYearStatusSuccessListApiResponse {
+    status: String
+    message: String
+    data: [TransferYearStatusSuccess]
+}
+
+type TransferMonthStatusFailedListApiResponse {
+    status: String
+    message: String
+    data: [TransferMonthStatusFailed]
+}
+
+type TransferYearStatusFailedListApiResponse {
+    status: String
+    message: String
+    data: [TransferYearStatusFailed]
+}
+
+input CreateTransferInput {
+    transferFrom: String
+    transferTo: String
+    transferAmount: Long
+}
+
+input UpdateTransferInput {
+    transferId: Long
+    transferFrom: String
+    transferTo: String
+    transferAmount: Long
+}
+
+input CardNumberYearIntInput {
+    cardNumber: String
+    year: Int
+}
+
+input YearMonthIntInput {
+    year: Int
+    month: Int
+}
+
+input CardNumberYearMonthIntInput {
+    cardNumber: String
+    year: Int
+    month: Int
+}
+
+extend type Query {
+    "Mirrors GET /api/transfers."
+    transfers(input: PageInput): TransferPaginationResponse
+    "Mirrors GET /api/transfers/{id}."
+    transfer(id: Long!): TransferApiResponse
+    "Mirrors GET /api/transfers/active."
+    activeTransfers(input: PageInput): TransferDeleteAtPaginationResponse
+    "Mirrors GET /api/transfers/trashed."
+    trashedTransfers(input: PageInput): TransferDeleteAtPaginationResponse
+    "Mirrors GET /api/transfers/from/{transferFrom}."
+    transfersByFrom(transferFrom: String!): TransferListApiResponse
+    "Mirrors GET /api/transfers/to/{transferTo}."
+    transfersByTo(transferTo: String!): TransferListApiResponse
+    "Mirrors GET /api/transfers/stats/amount/monthly."
+    transferMonthlyAmount(input: YearInput!): TransferMonthAmountListApiResponse
+    "Mirrors GET /api/transfers/stats/amount/yearly."
+    transferYearlyAmount(input: YearInput!): TransferYearAmountListApiResponse
+    "Mirrors GET /api/transfers/stats/amount/monthly/by-card/sender."
+    transferMonthlyAmountBySender(input: CardNumberYearIntInput): TransferMonthAmountListApiResponse
+    "Mirrors GET /api/transfers/stats/amount/monthly/by-card/receiver."
+    transferMonthlyAmountByReceiver(input: CardNumberYearIntInput): TransferMonthAmountListApiResponse
+    "Mirrors GET /api/transfers/stats/amount/yearly/by-card/sender."
+    transferYearlyAmountBySender(input: CardNumberYearIntInput): TransferYearAmountListApiResponse
+    "Mirrors GET /api/transfers/stats/amount/yearly/by-card/receiver."
+    transferYearlyAmountByReceiver(input: CardNumberYearIntInput): TransferYearAmountListApiResponse
+    "Mirrors GET /api/transfers/stats/status/monthly/success."
+    transferMonthlyStatusSuccess(input: YearMonthIntInput): TransferMonthStatusSuccessListApiResponse
+    "Mirrors GET /api/transfers/stats/status/yearly/success."
+    transferYearlyStatusSuccess(input: YearInput!): TransferYearStatusSuccessListApiResponse
+    "Mirrors GET /api/transfers/stats/status/monthly/failed."
+    transferMonthlyStatusFailed(input: YearMonthIntInput): TransferMonthStatusFailedListApiResponse
+    "Mirrors GET /api/transfers/stats/status/yearly/failed."
+    transferYearlyStatusFailed(input: YearInput!): TransferYearStatusFailedListApiResponse
+    "Mirrors GET /api/transfers/stats/status/monthly/success/by-card."
+    transferMonthlyStatusSuccessByCard(input: CardNumberYearMonthIntInput): TransferMonthStatusSuccessListApiResponse
+    "Mirrors GET /api/transfers/stats/status/yearly/success/by-card."
+    transferYearlyStatusSuccessByCard(input: CardNumberYearIntInput): TransferYearStatusSuccessListApiResponse
+    "Mirrors GET /api/transfers/stats/status/monthly/failed/by-card."
+    transferMonthlyStatusFailedByCard(input: CardNumberYearMonthIntInput): TransferMonthStatusFailedListApiResponse
+    "Mirrors GET /api/transfers/stats/status/yearly/failed/by-card."
+    transferYearlyStatusFailedByCard(input: CardNumberYearIntInput): TransferYearStatusFailedListApiResponse
+}
+
+extend type Mutation {
+    "Mirrors POST /api/transfers/create."
+    createTransfer(input: CreateTransferInput!): TransferApiResponse
+    "Mirrors POST /api/transfers/update."
+    updateTransfer(input: UpdateTransferInput!): TransferApiResponse
+    "Mirrors POST /api/transfers/trash/{id}."
+    trashTransfer(id: Long!): TransferDeleteAtApiResponse
+    "Mirrors POST /api/transfers/restore/{id}."
+    restoreTransfer(id: Long!): TransferDeleteAtApiResponse
+    "Mirrors DELETE /api/transfers/{id}."
+    deleteTransferPermanent(id: Long!): BooleanApiResponse
+    "Mirrors POST /api/transfers/restore-all."
+    restoreAllTransfers: BooleanApiResponse
+    "Mirrors POST /api/transfers/delete-all."
+    deleteAllTransfersPermanent: BooleanApiResponse
+}

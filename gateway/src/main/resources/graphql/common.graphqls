@@ -1,0 +1,48 @@
+"A 64-bit signed integer represented as a JSON string or number."
+scalar Long
+
+"Pagination metadata mirroring the former REST `PaginationMeta` envelope."
+type PageInfo {
+    page: Int
+    pageSize: Int
+    totalItems: Long
+    totalPages: Int
+}
+
+"Generic boolean payload wrapper."
+type BooleanApiResponse {
+    status: String
+    message: String
+    data: Boolean
+}
+
+"Standard pagination input shared by list queries."
+input PageInput {
+    page: Int
+    pageSize: Int
+    search: String
+}
+
+"Year-only filter shared by revenue/stats queries."
+input YearInput {
+    year: Long
+}
+
+"Year + month filter shared by stats queries."
+input YearMonthFilterInput {
+    year: Long
+    month: Int
+}
+
+"Year + card number filter shared by by-card stats queries."
+input CardNumberYearInput {
+    cardNumber: String
+    year: Long
+}
+
+"Card number + year + month filter shared by by-card stats queries."
+input CardNumberYearMonthInput {
+    cardNumber: String
+    year: Long
+    month: Int
+}

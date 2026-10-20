@@ -1,0 +1,140 @@
+type Saldo {
+    id: Long
+    cardNumber: String
+    totalBalance: Long
+    withdrawAmount: Long
+    withdrawTime: String
+    createdAt: String
+    updatedAt: String
+}
+
+type SaldoDeleteAt {
+    id: Long
+    cardNumber: String
+    totalBalance: Long
+    withdrawAmount: Long
+    withdrawTime: String
+    createdAt: String
+    updatedAt: String
+    deletedAt: String
+}
+
+type SaldoMonthBalance {
+    monthName: String
+    totalBalance: Long
+}
+
+type SaldoYearBalance {
+    reportYear: String
+    totalBalance: Long
+}
+
+type SaldoMonthTotalBalance {
+    monthName: String
+    reportYear: String
+    totalBalance: Long
+}
+
+type SaldoYearTotalBalance {
+    reportYear: String
+    totalBalance: Long
+}
+
+type SaldoApiResponse {
+    status: String
+    message: String
+    data: Saldo
+}
+
+type SaldoDeleteAtApiResponse {
+    status: String
+    message: String
+    data: SaldoDeleteAt
+}
+
+type SaldoPaginationResponse {
+    status: String
+    message: String
+    data: [Saldo]
+    pagination: PageInfo
+}
+
+type SaldoDeleteAtPaginationResponse {
+    status: String
+    message: String
+    data: [SaldoDeleteAt]
+    pagination: PageInfo
+}
+
+type SaldoMonthBalanceListApiResponse {
+    status: String
+    message: String
+    data: [SaldoMonthBalance]
+}
+
+type SaldoYearBalanceListApiResponse {
+    status: String
+    message: String
+    data: [SaldoYearBalance]
+}
+
+type SaldoMonthTotalBalanceListApiResponse {
+    status: String
+    message: String
+    data: [SaldoMonthTotalBalance]
+}
+
+type SaldoYearTotalBalanceListApiResponse {
+    status: String
+    message: String
+    data: [SaldoYearTotalBalance]
+}
+
+input CreateSaldoInput {
+    cardNumber: String
+    totalBalance: Long
+}
+
+input UpdateSaldoInput {
+    saldoId: Long
+    cardNumber: String
+    totalBalance: Long
+}
+
+extend type Query {
+    "Mirrors GET /api/saldos."
+    saldos(input: PageInput): SaldoPaginationResponse
+    "Mirrors GET /api/saldos/active."
+    activeSaldos(input: PageInput): SaldoDeleteAtPaginationResponse
+    "Mirrors GET /api/saldos/trashed."
+    trashedSaldos(input: PageInput): SaldoDeleteAtPaginationResponse
+    "Mirrors GET /api/saldos/{id}."
+    saldo(id: Long!): SaldoApiResponse
+    "Mirrors GET /api/saldos/by-card/{cardNumber}."
+    saldoByCard(cardNumber: String!): SaldoApiResponse
+    "Mirrors GET /api/saldos/balance/monthly."
+    saldoMonthlyBalance(input: YearInput!): SaldoMonthBalanceListApiResponse
+    "Mirrors GET /api/saldos/balance/yearly."
+    saldoYearlyBalance(input: YearInput!): SaldoYearBalanceListApiResponse
+    "Mirrors GET /api/saldos/total-amount/monthly."
+    saldoMonthlyTotalBalance(input: YearMonthFilterInput): SaldoMonthTotalBalanceListApiResponse
+    "Mirrors GET /api/saldos/total-amount/yearly."
+    saldoYearlyTotalBalance(input: YearInput!): SaldoYearTotalBalanceListApiResponse
+}
+
+extend type Mutation {
+    "Mirrors POST /api/saldos/create."
+    createSaldo(input: CreateSaldoInput!): SaldoApiResponse
+    "Mirrors POST /api/saldos/update."
+    updateSaldo(input: UpdateSaldoInput!): SaldoApiResponse
+    "Mirrors POST /api/saldos/trash/{id}."
+    trashSaldo(id: Long!): SaldoDeleteAtApiResponse
+    "Mirrors POST /api/saldos/restore/{id}."
+    restoreSaldo(id: Long!): SaldoDeleteAtApiResponse
+    "Mirrors DELETE /api/saldos/{id}."
+    deleteSaldoPermanent(id: Long!): BooleanApiResponse
+    "Mirrors POST /api/saldos/restore-all."
+    restoreAllSaldos: BooleanApiResponse
+    "Mirrors POST /api/saldos/delete-all."
+    deleteAllSaldosPermanent: BooleanApiResponse
+}
